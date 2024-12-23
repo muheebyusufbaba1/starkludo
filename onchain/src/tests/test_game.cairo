@@ -11,10 +11,9 @@ mod tests {
         GameActions, IGameActionsDispatcher, IGameActionsDispatcherTrait
     };
     use starkludo::models::game::{Game, m_Game};
-    use starkludo::models::player::{Player, m_Player};
+    use starkludo::models::player::{Player, m_Player, AddressToUsername, UsernameToAddress, m_AddressToUsername, m_UsernameToAddress};
 
     use starkludo::models::game::{GameMode, GameStatus};
-    use starkludo::models::player::{AddressToUsername, UsernameToAddress, m_AddressToUsername, m_UsernameToAddress};
     use starkludo::errors::Errors;
 
     /// Defines the namespace configuration for the Starkludo game system
@@ -36,6 +35,7 @@ mod tests {
                 TestResource::Model(m_UsernameToAddress::TEST_CLASS_HASH),
 
                 // Register the main contract containing game actions
+
                 TestResource::Contract(GameActions::TEST_CLASS_HASH),
 
                 // Register the GameCreated event's class hash
@@ -104,7 +104,44 @@ mod tests {
     }
 
     #[test]
-    fn test_start_game_success() {
+    fn test_get_username_from_address() {
+    
+        let ndef = namespace_def();
+        let mut world = spawn_test_world([ndef].span());
+        world.sync_perms_and_inits(contract_defs());
+        
+        let (contract_address, _) = world.dns(@"GameActions").unwrap();
+        let game_action_system = IGameActionsDispatcher { contract_address };
+        
+        let test_address1 = starknet::contract_address_const::<'test_user1'>();
+        let test_address2 = starknet::contract_address_const::<'test_user2'>();
+        let username1: felt252 = 'alice';
+        let username2: felt252 = 'bob';
+
+        let address_to_username1 = AddressToUsername { 
+            address: test_address1,
+            username: username1 
+        };
+        let address_to_username2 = AddressToUsername { 
+            address: test_address2,
+            username: username2 
+        };
+       
+        world.write_model(@address_to_username1);
+        world.write_model(@address_to_username2);
+
+        let retrieved_username1 = game_action_system.get_username_from_address(test_address1);
+        let retrieved_username2 = game_action_system.get_username_from_address(test_address2);
+
+        assert(retrieved_username1 == username1, 'Wrong username for address1');
+        assert(retrieved_username2 == username2, 'Wrong username for address2');
+
+        let non_existent_address = starknet::contract_address_const::<'non_existent'>();
+        let retrieved_username3 = game_action_system.get_username_from_address(non_existent_address);
+        assert(retrieved_username3 == 0, 'Non-existent should return 0');
+    }
+
+fn test_start_game_success() {
         // Setup world and contract
         let caller = starknet::contract_address_const::<'Mr_T'>();
         let ndef = namespace_def();
