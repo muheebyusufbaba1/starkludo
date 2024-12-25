@@ -40,6 +40,33 @@
     }
   }
 
+  .dice-option-container{
+    width: 722px;
+    margin-top: 30px;
+    background-color: #dac29c;
+    padding: 20px 60px;
+    background-color: #dac29c;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 50px;
+      border-bottom: 1px solid #854d15;
+
+      p {
+        font-size: 24px;
+        color: #854d15;
+      }
+    }
+
+    .dice-grid{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
   .board {
     margin-top: 30px;
     background-color: #dac29c;

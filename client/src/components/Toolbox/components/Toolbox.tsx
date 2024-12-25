@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
 import "../../../styles/toolbox/Toolbox.scss";
-import dice10 from "../../../assets/images/dice-10.svg";
-import dice9 from "../../../assets/images/dice-9.svg";
-import dice8 from "../../../assets/images/dice-8.svg";
-import dice7 from "../../../assets/images/dice-7.svg";
-import dice6 from "../../../assets/images/dice-6.svg";
-import dice5 from "../../../assets/images/dice-5.svg";
+
+import UniqueDice from "../../../assets/images/unique-dice.svg";
+import RetroDice from "../../../assets/images/retro-dice.svg";
+import GoldenDice from "../../../assets/images/golden-dice.svg";
 import map from "../../../assets/images/Eyedropper.svg";
 import king from "../../../assets/images/Crown.svg";
 import square from "../../../assets/images/Polygon.svg";
@@ -18,7 +16,7 @@ import { DiceContext } from "../../../context/dice-context";
 import { ColorContext } from "../../../context/color-context";
 import { BoardContext } from "../../../context/board-context";
 import PieceDesignCard from "../../PieceDesignCard";
-import DiceCard from "../../DiceCard";
+import DiceCard from "./DiceCard";
 import OptionCard from "./OptionCard";
 
 interface ToolboxProps {
@@ -41,12 +39,9 @@ const Toolbox: React.FC<ToolboxProps> = ({
   ];
 
   const diceOptions = [
-    { name: "Basic Dice", option: "basic", img: dice5 },
-    { name: "Gold Dice", option: "gold", img: dice6 },
-    { name: "Black Dice", option: "black", img: dice7 },
-    { name: "Unique Dice", option: "unique", img: dice8 },
-    { name: "Red Dice", option: "red", img: dice9 },
-    { name: "Silver Dice", option: "silver", img: dice10 },
+    { name: "Gold Dice", option: "gold", img: GoldenDice },
+    { name: "Unique Dice", option: "unique", img: RetroDice },
+    { name: "Retro Dice", option: "retro", img: UniqueDice },
   ];
 
   const pieceDesigns = [
@@ -56,9 +51,8 @@ const Toolbox: React.FC<ToolboxProps> = ({
     { name: "Circle", option: "circle", img: circle },
   ];
 
+  console.log(activeCategory);
 
-  console.log(activeCategory)
-  
   return (
     <div className="toolbox-content">
       <div className="categories">
@@ -126,7 +120,14 @@ const Toolbox: React.FC<ToolboxProps> = ({
       )}
 
       {activeCategory === "DICE" && (
-        <div className="dice-options">
+        <div className="dice-option-container ">
+          <div className="header">
+            <p>Choose Dice To Play With</p>
+            <div onClick={() => onCategoryClick("")}>
+              <img src={CloseIcon} alt="close-icon" />
+            </div>
+          </div>
+          <div className="dice-grid">
           {diceOptions.map((item) => (
             <DiceCard
               img={item.img}
@@ -136,8 +137,10 @@ const Toolbox: React.FC<ToolboxProps> = ({
               onSelect={() => changeDice(item.option, item.img)}
             />
           ))}
+          </div>
         </div>
       )}
+
       {activeCategory === "COLOR" && (
         <div className="piece-options">
           {pieceDesigns.map((item) => (
@@ -145,7 +148,6 @@ const Toolbox: React.FC<ToolboxProps> = ({
               key={item.option}
               option={item}
               active={design === item.option}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onSelect={() => changeDesign(item.option as any)}
             />
           ))}
