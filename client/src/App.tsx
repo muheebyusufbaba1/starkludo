@@ -34,7 +34,6 @@ import Settings from "./components/Settings";
 import ToolboxPage from "./components/Toolbox";
 
 const App = ({ sdk }: { sdk: SDK<StarkludoSchemaType> }) => {
-  console.log("SDK initialized:", sdk);
 
   const [activeWindow, setActiveWindow] = useState("");
   const [showMobileResponsiveWarning, setShowMobileResponsiveWarning] =
